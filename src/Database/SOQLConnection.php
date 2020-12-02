@@ -101,18 +101,11 @@ class SOQLConnection extends Connection
 	{
 		$query = str_replace('`', '', $query);
 		$bindings = array_map(function($item) {
-			try {
-				if (\Carbon\Carbon::parse($item) !== false && !$this->isSalesForceId($item)) {
-					return $item;
-				}
-			} catch (\Exception $e) {
-				if (is_int($item) || is_float($item)) {
-					return $item;
-				} else {
-					return "'$item'";
-				}
-			}
-			return "'$item'";
+            if (is_int($item) || is_float($item)) {
+                return $item;
+            } else {
+                return "'$item'";
+            }
 		}, $bindings);
 
 		$query = Str::replaceArray('?', $bindings, $query);
